@@ -1,7 +1,7 @@
 dokku-prebuild [![Build Status](https://travis-ci.org/krisrang/dokku-prebuild.svg?branch=master)](https://travis-ci.org/krisrang/dokku-prebuild)
 ================
 
-dokku-prebuild is a plugin for [dokku][dokku] that allows you to run commands on your app during deploy before building independent of the app repository.
+dokku-prebuild is a plugin for [dokku][dokku] that allows you to run allows you to run external scripts before build during deploy.
 
 This version is tested against dokku 0.3.17.
 
