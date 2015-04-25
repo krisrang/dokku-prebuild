@@ -11,7 +11,7 @@ if [[ -f "$SCRIPT_PATH" ]]; then
   test "$(docker wait $id)" -eq 0
   docker commit $id $IMAGE > /dev/null
 
-  id=$(docker run -d $IMAGE /bin/bash -c "cd /app; exec /app/prebuild.sh")
+  id=$(docker run -i -a stdin $IMAGE /bin/bash -c "cd /app; exec /app/prebuild.sh")
   test "$(docker wait $id)" -eq 0
   docker commit $id $IMAGE > /dev/null
 fi
