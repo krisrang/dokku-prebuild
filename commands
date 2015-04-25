@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+source "$PLUGIN_PATH/common/functions"
+source "$(dirname $0)/functions"
+set +e
+
+case "$1" in
+  prebuild)
+    verify_app_name "$APP"; check_exists
+    cat "$SCRIPT_PATH"
+    ;;
+
+  prebuild:set)
+    verify_app_name "$APP"
+    dokku_log_info1 "Setting prebuild script for $APP"
+    cat - > "$SCRIPT_PATH"
+    chmod +x "$SCRIPT_PATH"
+    ;;
+
+  prebuild:delete)
+    verify_app_name "$APP"; check_exists
+    dokku_log_info1 "Deleting prebuild script for $APP"
+    rm "$SCRIPT_PATH"
+    ;;
+
+
+  help)
+    cat && cat<<EOF
+    prebuild            <app>                       Show contents of prebuild script for <app>
+    prebuild:set        <app> < <filename>          Set script to run before build for <app>
+    prebuild:delete     <app>                       Delete prebuild script for <app>
+EOF
+    ;;
+esac

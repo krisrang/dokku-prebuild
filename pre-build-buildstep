@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+source "$PLUGIN_PATH/common/functions"
+
+APP="$1"; SCRIPT_PATH="$DOKKU_ROOT/$APP/PREBUILDSCRIPT"
+
+if [[ -f "$SCRIPT_PATH" ]]; then
+  dokku_log_info1 "Injecting prebuild script"
+  PBSCRIPT=$(cat "$SCRIPT_PATH")
+  id=$(echo -e "$PBSCRIPT" | docker run -i -a stdin $IMAGE /bin/bash -c "cat >> /app/prebuild.sh")
+  test "$(docker wait $id)" -eq 0
+  docker commit $id $IMAGE > /dev/null
+
+  id=$(docker run -i -a stdin $IMAGE /bin/bash -c "exec /app/prebuild.sh")
+  test "$(docker wait $id)" -eq 0
+  docker commit $id $IMAGE > /dev/null
+fi
