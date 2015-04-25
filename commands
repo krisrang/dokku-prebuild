@@ -14,7 +14,6 @@ case "$1" in
     verify_app_name "$APP"
     dokku_log_info1 "Setting prebuild script for $APP"
     cat - > "$SCRIPT_PATH"
-    chmod +x "$SCRIPT_PATH"
     ;;
 
   prebuild:delete)
