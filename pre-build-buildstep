@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
-source "$PLUGIN_PATH/common/functions"
+source "$(dirname $0)/../common/functions"
 
 APP="$1"; IMAGE="dokku/$APP"; SCRIPT_PATH="$DOKKU_ROOT/$APP/PREBUILDSCRIPT"
 
@@ -11,7 +11,7 @@ if [[ -f "$SCRIPT_PATH" ]]; then
   test "$(docker wait $id)" -eq 0
   docker commit $id $IMAGE > /dev/null
 
-  id=$(docker run -i $IMAGE /bin/bash -c "exec /app/prebuild.sh")
+  id=$(docker run -d $IMAGE /bin/bash -c "cd /app; exec /app/prebuild.sh")
   test "$(docker wait $id)" -eq 0
   docker commit $id $IMAGE > /dev/null
 fi
